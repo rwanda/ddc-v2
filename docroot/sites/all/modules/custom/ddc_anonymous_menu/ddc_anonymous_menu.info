@@ -1,0 +1,12 @@
+name = ddc_anonymous_menu
+description = Deeson developer challenge anonymous user login feature
+core = 7.x
+package = Features
+version = 7.x-1.0
+dependencies[] = fe_block
+dependencies[] = features
+dependencies[] = menu
+features[fe_block_settings][] = menu-menu-anonymous-user-menu
+features[features_api][] = api:2
+features[menu_custom][] = menu-anonymous-user-menu
+features[menu_links][] = menu-anonymous-user-menu_login:user/login

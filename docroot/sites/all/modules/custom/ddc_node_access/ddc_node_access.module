@@ -1,0 +1,58 @@
+<?php
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ *
+ * @param path
+ *   Which path of the site we're using to display help
+ * @param arg
+ *   Array that holds the current path as returned from arg() function
+ */
+function ddc_node_access_help($path, $arg) {
+  switch ($path) {
+  case "admin/help#ddc_node_access":
+    return '<p>' . t("Restricts node access based on user role") . '</p>';
+    break;
+  }
+}
+
+/**
+ * Implements node_access_records().
+ */
+function ddc_node_access_node_access_records($node) {
+  $grants = array();
+  if (array_key_exists('field_special_article', $node)) {
+  if (array_key_exists('und', $node->field_special_article)) {
+  if ($node->field_special_article['und'][0]['value'] == 1) {
+        if ($node->type === 'article' && $node->status) {
+          $grants[] = array(
+            'realm' => 'ddc_node_access_myrealm',
+            'gid' => 1,
+            'grant_view' => 1,
+            'grant_update' => 0,
+            'grant_delete' => 0,
+            'priority' => 0,
+          );
+        }
+      }
+    }
+  }
+
+  return $grants;
+}
+
+/**
+ * Implements hook_node_grants().
+ */
+function ddc_node_access_node_grants($account, $op) {
+  $grants = array();
+
+  if (user_access('can view member articles', $account)) {
+    // Within our realm users with the correct
+    // permission have a gid of 1.
+    $grants['ddc_node_access_myrealm'][] = array(1);
+  }
+
+  return $grants;
+}
